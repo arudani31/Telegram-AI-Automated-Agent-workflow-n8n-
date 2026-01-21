@@ -1,0 +1,133 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message",
+          "poll"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e134b641-7c08-418c-beb5-da697fd5ffd9",
+      "name": "Telegram Trigger",
+      "webhookId": "23df8735-8479-4fba-ba4d-c8870a300c95",
+      "credentials": {
+        "telegramApi": {
+          "id": "tk2ui0sPUavGl8ys",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e187b1cb-e3a9-4f69-b0ad-35933db3c845",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "77f6aa8d-5959-4da0-a83e-953a3e5ea0a9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "qfjc5cK0z2orSPoV",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $node[\"Telegram Trigger\"].json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        144
+      ],
+      "id": "fb9cf54e-d019-4cb4-9e6d-f12344f79a74",
+      "name": "Send a text message",
+      "webhookId": "9125e53a-ad59-4270-9789-2430146d096b",
+      "credentials": {
+        "telegramApi": {
+          "id": "tk2ui0sPUavGl8ys",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "ccf87fe5-4f19-4aed-8f9b-5c2ae26ec04c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e6042bc4dc3e580d66c95c9e15c2fed2442623719f229169c1439f1b835d2867"
+  },
+  "id": "-FJ-rN2pmrd3Ooife1IoR",
+  "tags": []
+}
